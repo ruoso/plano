@@ -1,0 +1,13 @@
+
+Testar o "Plano":
+
+  $ perl -Ilib run-plano.pl
+
+  - um Plano usa uma lista de cenarios que sao simulados em sequencia:
+  
+            cenario1,
+            [ cenario2a, cenario2b ],   # opcoes
+            cenario3,
+
+  - Ele irá gerar arquivos de nome output_NOMEDOCENARIO.csv para cada uma das possibilidades
+        
