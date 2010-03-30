@@ -43,4 +43,30 @@ sub anterior {
     return $self->get( $tag );
 }
 
+sub export_csv {
+    my ($self) = @_;
+
+    my $cenario = $self;
+    my @stack = $cenario;
+
+    my $name = $cenario->{nome};
+    $name =~ s/[^A-Za-z0-9]/_/gs;
+    open my $csvfile, '>', 'output_'.$name.'.csv' or die $!;
+
+    my @keys = grep { /^\$/ } keys %$cenario;
+    print {$csvfile} join ',', map { '"'.$_.'"' } @keys;
+    print {$csvfile} "\n";
+
+    while (my $anterior = $cenario->{anterior}) {
+        push @stack, $anterior;
+        $cenario = $anterior;
+    }
+    foreach my $iter (reverse @stack) {
+        print {$csvfile} join ',', map { '"'.$_.'"' }
+          map { $iter->get($_) } @keys;
+        print {$csvfile} "\n"
+    }
+
+}
+
 1;

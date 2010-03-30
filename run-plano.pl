@@ -83,25 +83,5 @@ my $i = Plano->new
    ]);
 
 my @cenarios = $i->run;
-foreach my $cenario (@cenarios) {
-    my @stack = $cenario;
-
-    my $name = $cenario->{nome};
-    $name =~ s/[^A-Za-z0-9]/_/gs;
-    open my $csvfile, '>', 'output_'.$name.'.csv' or die $!;
-
-    my @keys = grep { /^\$/ } keys %$cenario;
-    print {$csvfile} join ',', map { '"'.$_.'"' } @keys;
-    print {$csvfile} "\n";
-
-    while (my $anterior = $cenario->{anterior}) {
-        push @stack, $anterior;
-        $cenario = $anterior;
-    }
-    foreach my $iter (reverse @stack) {
-        print {$csvfile} join ',', map { '"'.$_.'"' }
-          map { $iter->get($_) } @keys;
-        print {$csvfile} "\n"
-    }
-}
+$_->export_csv for @cenarios;
 
